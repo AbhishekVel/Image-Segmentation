@@ -11,6 +11,7 @@ public class ImageMatrix {
 	private int pixelsWidth, pixelsHeight;
 	private int[][] pixels;
 	private int[][][] featuresData;
+	private int[][] cluster;
 	
 	public ImageMatrix(Image image) {
 		this.pixelsWidth = image.getWidth(null);
@@ -41,6 +42,9 @@ public class ImageMatrix {
 				featuresData[i][j][2] = c.getBlue();
 			}
 		}
+		
+		//initialize cluster for future purpose of deciding which pixel is in which cluster
+		this.cluster = new int[this.pixelsHeight][this.pixelsWidth];
 	}
 	
 	/**
@@ -74,6 +78,10 @@ public class ImageMatrix {
 
 	public int[][][] featuresData() {
 		return this.featuresData;
+	}
+	
+	public int[][] getCluster() {
+		return this.cluster;
 	}
 	
 	

@@ -1,9 +1,7 @@
-package model.Algorithms;
+package model;
 
 import java.awt.Point;
 import java.util.ArrayList;
-
-import model.ImageMatrix;
 
 public class Cluster {
 
@@ -17,6 +15,15 @@ public class Cluster {
 		this.centroid = new int[3];
 	}
 	
+	public void addPoint(Point point) {
+		points.add(point);
+	}
+	
+	/**
+	 * Supposed to be used when there is a change in the points
+	 * This updates the centroid to fit the mean of all the values of of the points
+	 * O(p) : p for # of points
+	 */
 	public void updateCentroid() {
 		if (points.size() > 0) {
 			
