@@ -6,25 +6,28 @@ import java.awt.image.PixelGrabber;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class ImageMatrix {
 	
-	private int pixelsWidth, pixelsHeight;
+	private int pixelsWidth, pixelsHeight, numOfClusters;
 	private int[][] pixels;
 	private int[][][] featuresData;
 	private int[][] cluster;
 	
-	public ImageMatrix(int pixelsHeight, int pixelsWidth) {
+	public ImageMatrix(int pixelsHeight, int pixelsWidth, int numOfClusters) {
 		this.pixelsWidth = pixelsWidth;
 		this.pixelsHeight = pixelsHeight;
 		this.pixels = new int[pixelsHeight][pixelsWidth];
+		this.numOfClusters = numOfClusters;
 	}
-	public ImageMatrix(Image image) {
+	public ImageMatrix(Image image, int numOfClusters) {
 		this.pixelsWidth = image.getWidth(null);
 		this.pixelsHeight = image.getHeight(null);
 		this.pixels = new int[pixelsHeight][pixelsWidth];
+		this.numOfClusters = numOfClusters;
 		
 		int[] oneDimPixels = new int[pixelsWidth*pixelsHeight];
 		
@@ -72,37 +75,16 @@ public class ImageMatrix {
 	}
 	
 	
-	public int getPixelsHeight() {
-		return this.pixelsHeight;
-	}
-	
-	public int getPixelsWidth() {
-		return this.pixelsWidth;
-	}
-	
-	public int[][] pixels() {
-		return this.pixels;
-	}
-
-	public int[][][] featuresData() {
-		return this.featuresData;
-	}
-	
-	public int[][] getCluster() {
-		return this.cluster;
-	}
-	
 	/**
 	 * Intended to be called after a segmentation algorithm has been used on this matrix
 	 * @return the new segmented image
 	 */
 	public BufferedImage getSegmentedImage(){
-		ImageMatrix alteredImageMatrix = new ImageMatrix(this.pixelsHeight, this.pixelsWidth);
-		int clusterCount = clusterCount();
+		ImageMatrix alteredImageMatrix = new ImageMatrix(this.pixelsHeight, this.pixelsWidth, this.numOfClusters);
 		
 		for (int i = 0; i < this.pixelsHeight; i++) {
 			for (int j = 0; j < this.pixelsWidth; j++) {
-				Color c = Color.getHSBColor(this.cluster[i][j] / (float) clusterCount, 1.0f, 1.0f);
+				Color c = Color.getHSBColor(this.cluster[i][j] / (float) alteredImageMatrix.numOfClusters, 1.0f, 1.0f);
 				alteredImageMatrix.pixels()[i][j] = c.getRGB();
 			}
 		}
@@ -117,22 +99,6 @@ public class ImageMatrix {
 		
 		return alteredImage;
 	}
-	
-	
-	/**
-	 * TODO make this cluster count better
-	 * @return the count of the number of clusters
-	 */
-	private int clusterCount() {
-		Set<Integer> set = new TreeSet<Integer>();
-		for (int i = 0; i < this.pixelsHeight; i++) {
-			for (int j = 0; j < this.pixelsWidth; j++) {
-				set.add(new Integer(cluster[i][j]));
-			}
-		}
-		return set.size();
-	}
-
 	
 	/**
 	 * prints out the data in a text file to test the data
@@ -155,6 +121,49 @@ public class ImageMatrix {
 			e.printStackTrace();
 		}
 
+	}
+	
+	/** 
+	 * Since some of the clusters may not have been used for an image, we must go through and check the num of clusters used
+	 * @return the actual amount of clusters
+	 */
+	public int getClusterCount() {
+		Set<Integer> set = new HashSet<Integer>();
+		for (int i = 0; i < this.pixelsHeight; i++) {
+			for (int j = 0; j < this.pixelsWidth; j++) {
+				set.add(new Integer(cluster[i][j]));
+			}
+		}
+		System.out.println("cluster count: " + set.size());
+		return set.size();
+	}
+	
+	/**
+	 * @return the entered number of clusters (not necessarily the actual number of clusters)
+	 */
+	public int getNumOfClusters() {
+		return this.numOfClusters;
+	}
+
+	
+	public int getPixelsHeight() {
+		return this.pixelsHeight;
+	}
+	
+	public int getPixelsWidth() {
+		return this.pixelsWidth;
+	}
+	
+	public int[][] pixels() {
+		return this.pixels;
+	}
+
+	public int[][][] featuresData() {
+		return this.featuresData;
+	}
+	
+	public int[][] getCluster() {
+		return this.cluster;
 	}
 	
 	

@@ -23,10 +23,13 @@ public class View extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		originalImageView = new ImageView();
-		alteredImageView = new ImageView();
 		originalImageView.setFitHeight(sceneHeight);
-		originalImageView.setFitWidth(sceneWidth);
+		originalImageView.setFitWidth(sceneWidth/2);
 		
+		alteredImageView = new ImageView();
+		alteredImageView.setFitHeight(sceneHeight);
+		alteredImageView.setFitWidth(sceneWidth/2);
+
 		BorderPane pane = new BorderPane();
 		pane.setLeft(originalImageView);
 		pane.setRight(alteredImageView);
@@ -38,8 +41,12 @@ public class View extends Application {
 		primaryStage.show();
 		
 		
-		BufferedImage img = ImageIO.read(new File("./images/dog.jpg"));
-		ImageMatrix imageMatrix = new ImageMatrix(img);
+		BufferedImage originalImg = ImageIO.read(new File("./images/cat.jpg"));
+		originalImageView.setImage(SwingFXUtils.toFXImage(originalImg, null));
+
+		int numOfClusters = 5;
+		
+		ImageMatrix imageMatrix = new ImageMatrix(originalImg, numOfClusters);
 		Algorithm algorithm = new KMeansAlgorithm(imageMatrix);
 		
 		algorithm.process();

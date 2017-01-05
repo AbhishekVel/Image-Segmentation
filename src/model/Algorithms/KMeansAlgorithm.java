@@ -12,7 +12,7 @@ public class KMeansAlgorithm extends Algorithm {
 
 	public KMeansAlgorithm(ImageMatrix image) {
 		super(image);
-		clusters = new Cluster[3];
+		clusters = new Cluster[image.getNumOfClusters()];
 	}
 	
 	@Override
@@ -27,8 +27,8 @@ public class KMeansAlgorithm extends Algorithm {
 	 * [O(p) : p for # of pixels] time complexity
 	 */
 	private void assignClustersRandomly() {
-		
 		Random random = new Random();
+		
 		for (int i = 0; i < this.image.getPixelsHeight(); i++) {
 			for (int j = 0; j < this.image.getPixelsWidth(); j++) {
 				this.image.getCluster()[i][j] = random.nextInt(clusters.length);
@@ -45,7 +45,7 @@ public class KMeansAlgorithm extends Algorithm {
 	 * [O(p*c + p) : p for # of pixels and c for # of clusters] time complexity
 	 */
 	private void rebuildClusters() {
-		clusters = new Cluster[3];
+		clusters = new Cluster[this.image.getNumOfClusters()];
 		
 		//[O(p) : p for # of pixels] time complexity, since iterating through all pixels
 		for (int i = 0; i < this.image.getPixelsHeight(); i++) {
@@ -63,10 +63,10 @@ public class KMeansAlgorithm extends Algorithm {
 		
 		//[O(p*c) p for # of pixels and c for # of clusters] time complexity
 		for (int i = 0; i < clusters.length; i++) {
+			if (clusters[i] == null)
+				continue;
 			clusters[i].updateCentroid();
 		}
-		
-		System.out.println("Completed building clusters.");
 	}
 	
 	/**
@@ -74,7 +74,7 @@ public class KMeansAlgorithm extends Algorithm {
 	 * if a change occurred, then the algorithm must be repeated again until no change occurs (indication of the clusters stabilizing)
 	 */
 	private void generateClusters() {
-		boolean changeOccurred = false;
+		boolean changeOccurred;
 		
 		// do while loop is used to allow one iteration of the program before checking for a change
 		do {
@@ -86,11 +86,22 @@ public class KMeansAlgorithm extends Algorithm {
 					int bestClusterIndex = -1;
 					
 					for (int clusterIndex = 0; clusterIndex < clusters.length; clusterIndex++) {
-						double computedDistance = euclideanDistance(this.image.featuresData()[i][j], clusters[clusterIndex].getCentroid());
 						
-						if (computedDistance < minDistance) {
-							minDistance = computedDistance;
-							bestClusterIndex = clusterIndex;	
+						// an empty cluster (best to use this instead of looking
+						// for another cluster, since we can make this the closest
+						if (clusters[clusterIndex] == null) {
+							clusters[clusterIndex] = new Cluster(image);
+							minDistance = 0;
+							bestClusterIndex = clusterIndex;
+							break;
+						} else {
+							double computedDistance = euclideanDistance(this.image.featuresData()[i][j],
+									clusters[clusterIndex].getCentroid());
+
+							if (computedDistance < minDistance) {
+								minDistance = computedDistance;
+								bestClusterIndex = clusterIndex;
+							}
 						}
 					}
 					
@@ -98,6 +109,7 @@ public class KMeansAlgorithm extends Algorithm {
 						this.image.getCluster()[i][j] = bestClusterIndex;
 						changeOccurred = true;
 					}
+					
 				}
 			}
 			
