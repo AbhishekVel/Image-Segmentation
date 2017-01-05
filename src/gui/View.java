@@ -1,3 +1,4 @@
+package gui;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -11,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.ImageMatrix;
 public class View extends Application {
 
 	
@@ -33,9 +35,9 @@ public class View extends Application {
 		
 		
 		BufferedImage img = ImageIO.read(new File("./images/dog.jpg"));
-		Matrix imageMatrix = new Matrix(img);
+		ImageMatrix imageMatrix = new ImageMatrix(img);
 		imageView.setImage(SwingFXUtils.toFXImage(img, null));
-		
+		imageMatrix.printFeaturesData();
 	}
 
 
