@@ -13,20 +13,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import model.ImageMatrix;
+import model.Algorithms.Algorithm;
+import model.Algorithms.KMeansAlgorithm;
 public class View extends Application {
 
 	
-	private int sceneWidth = 400, sceneHeight = 300;
-	private ImageView imageView;
+	private int sceneWidth = 800, sceneHeight = 300;
+	private ImageView originalImageView, alteredImageView;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		imageView = new ImageView();
-		
-		imageView.setFitHeight(sceneHeight);
-		imageView.setFitWidth(sceneWidth);
+		originalImageView = new ImageView();
+		alteredImageView = new ImageView();
+		originalImageView.setFitHeight(sceneHeight);
+		originalImageView.setFitWidth(sceneWidth);
 		
 		BorderPane pane = new BorderPane();
-		pane.setCenter(imageView);
+		pane.setLeft(originalImageView);
+		pane.setRight(alteredImageView);
+		
 		Scene scene = new Scene(pane, sceneWidth, sceneHeight);
 		
 		primaryStage.setTitle("Image Segmentation App");
@@ -36,8 +40,13 @@ public class View extends Application {
 		
 		BufferedImage img = ImageIO.read(new File("./images/dog.jpg"));
 		ImageMatrix imageMatrix = new ImageMatrix(img);
-		imageView.setImage(SwingFXUtils.toFXImage(img, null));
-		imageMatrix.printFeaturesData();
+		Algorithm algorithm = new KMeansAlgorithm(imageMatrix);
+		
+		algorithm.process();
+		BufferedImage segmentedImg = imageMatrix.getSegmentedImage();
+		
+		alteredImageView.setImage(SwingFXUtils.toFXImage(segmentedImg, null));
+		
 	}
 
 
