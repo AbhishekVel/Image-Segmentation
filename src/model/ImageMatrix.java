@@ -92,7 +92,6 @@ public class ImageMatrix {
 					writer.newLine();
 				}
 			}
-			
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {

@@ -4,11 +4,17 @@ import model.ImageMatrix;
 
 public abstract class Algorithm {
 	
-	private ImageMatrix image;
+	protected ImageMatrix image;
 	
 	public Algorithm(ImageMatrix image) {
 		this.image = image;
 	}
 	
 	public abstract void process();
+	
+	public ImageMatrix getImage() {
+		return this.image;
+	}
+	
+	
 }
