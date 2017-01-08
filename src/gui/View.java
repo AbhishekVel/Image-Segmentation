@@ -41,10 +41,10 @@ public class View extends Application {
 		primaryStage.show();
 		
 		
-		BufferedImage originalImg = ImageIO.read(new File("./images/cat.jpg"));
+		BufferedImage originalImg = ImageIO.read(new File("./images/test.png"));
 		originalImageView.setImage(SwingFXUtils.toFXImage(originalImg, null));
 
-		int numOfClusters = 5;
+		int numOfClusters = 2;
 		
 		ImageMatrix imageMatrix = new ImageMatrix(originalImg, numOfClusters);
 		Algorithm algorithm = new KMeansAlgorithm(imageMatrix);
