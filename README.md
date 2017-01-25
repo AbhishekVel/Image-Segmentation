@@ -1,5 +1,5 @@
 # Image Segmentation
-Description: Image Segmentation using the standard algorithm for image segmentation (KMeans Algorithm).
+Description: Image Segmentation based on RGB using the standard algorithm for image segmentation (KMeans Algorithm).
 
 Purpose: I made this program to learn more about Image Segmentation and is also intended for other beginners to learn Image Segmentation through a working example. I am posting important information about this project underneath to help others gain atleast a minimal understanding of this code along with proper documentation in the code.
 
